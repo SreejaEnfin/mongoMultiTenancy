@@ -10,4 +10,13 @@ export class TenantsService {
   async getTenantById(tenantId: string) {
     return this.TenantModel.findOne({ tenantId });
   }
+
+  async createTenant(data: any): Promise<Tenant> {
+    const createdTenant = new this.TenantModel(data);
+    return createdTenant.save();
+  }
+
+  async getProducts() {
+    return this.TenantModel.find();
+  }
 }

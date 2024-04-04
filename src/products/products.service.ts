@@ -9,4 +9,9 @@ export class ProductsService {
   async getProducts() {
     return this.ProductModel.find();
   }
+
+  async createProduct(data: any): Promise<Product> {
+    const createdTenant = new this.ProductModel(data);
+    return createdTenant.save();
+  }
 }
