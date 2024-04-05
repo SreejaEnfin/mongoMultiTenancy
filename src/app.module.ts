@@ -87,7 +87,7 @@ import { getProductModel } from './products/products.schema';
     }),
     determineDatabaseModule(),
     // getTenantModel(),
-    getProductModel(),
+    // getProductModel(),
     TenantsModule,
     ProductsModule,
   ],

@@ -1,12 +1,7 @@
-import {
-  ObjectIdColumn,
-  PrimaryGeneratedColumn,
-  getMetadataArgsStorage,
-} from 'typeorm';
+import { ObjectIdColumn, PrimaryGeneratedColumn } from 'typeorm';
 import * as dotenv from 'dotenv';
-import { MongooseModule } from '@nestjs/mongoose';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { PostgresModule } from 'src/databases/postgres.module';
+import { MongoModule } from 'src/databases/mongo.module';
 
 dotenv.config();
 
@@ -25,47 +20,42 @@ export const getIdColumnDecorator = () => {
   }
 };
 
-export const determineDatabaseModule = () => {
-  // return process.env.DB_TYPE === 'postgres'
-  //   ? PostgresModule'
-  //   : MongooseModule.forRootAsync({
-  //       imports: [ConfigModule],
-  //       useFactory: async (config) => ({
-  //         uri: config.get('database.mongoConnectionString'),
-  //       }),
-  //       inject: [ConfigService, ModuleRef],
-  //     });
+// export const determineDatabaseModule = () => {
+//   return process.env.DB_TYPE === 'postgres'
+//     ? TypeOrmModule.forRootAsync({
+//         imports: [],
+//         useFactory: async (configService: ConfigService) => {
+//           const entities = getMetadataArgsStorage()
+//             // eslint-disable-next-line @typescript-eslint/ban-types
+//             .tables.map((tbl) => tbl.target as Function)
+//             .filter((entity) => {
+//               console.log(process.env.DB_TYPE);
+//               return entity.toString().toLowerCase().includes('entity');
+//             });
+//           return {
+//             type: 'postgres',
+//             host: configService.get('postgres.host'),
+//             port: configService.get('postgres.port'),
+//             username: configService.get('postgres.username'),
+//             password: configService.get('postgres.password'),
+//             database: configService.get('postgres.database'),
+//             entities,
+//             synchronize: true, // Be cautious about using synchronize in production
+//             logging: true,
+//             autoLoadEntities: true,
+//           };
+//         },
+//         inject: [ConfigService],
+//       })
+//     : MongooseModule.forRootAsync({
+//         imports: [ConfigModule],
+//         useFactory: async (config) => ({
+//           uri: config.get('database.mongoConnectionString'),
+//         }),
+//         inject: [ConfigService],
+//       });
+// };
 
-  return process.env.DB_TYPE === 'postgres'
-    ? TypeOrmModule.forRootAsync({
-        imports: [],
-        useFactory: async (configService: ConfigService) => {
-          const entities = getMetadataArgsStorage()
-            // eslint-disable-next-line @typescript-eslint/ban-types
-            .tables.map((tbl) => tbl.target as Function)
-            .filter((entity) =>
-              entity.toString().toLowerCase().includes('entity'),
-            );
-          return {
-            type: 'postgres',
-            host: configService.get('postgres.host'),
-            port: configService.get('postgres.port'),
-            username: configService.get('postgres.username'),
-            password: configService.get('postgres.password'),
-            database: configService.get('postgres.database'),
-            entities,
-            synchronize: true, // Be cautious about using synchronize in production
-            logging: true,
-            autoLoadEntities: true,
-          };
-        },
-        inject: [ConfigService],
-      })
-    : MongooseModule.forRootAsync({
-        imports: [ConfigModule],
-        useFactory: async (config) => ({
-          uri: config.get('database.mongoConnectionString'),
-        }),
-        inject: [ConfigService],
-      });
+export const determineDatabaseModule = () => {
+  return process.env.DB_TYPE === 'postgres' ? PostgresModule : MongoModule;
 };

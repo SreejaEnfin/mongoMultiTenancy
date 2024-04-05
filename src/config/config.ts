@@ -6,6 +6,7 @@ export default () => ({
     mongoConnectionString: process.env.MONGODB_CONNECTION_STRING,
     postgresConnectionString: process.env.POSTGRES_DB_CONNECTION_STRING,
     dbType: process.env.DB_TYPE,
+    mongoDB: process.env.MONGODB_DB,
   },
   postgres: {
     type: 'postgres',
