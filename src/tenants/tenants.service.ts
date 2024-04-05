@@ -12,7 +12,26 @@ export class TenantsService {
   }
 
   async createTenant(data: any): Promise<Tenant> {
-    const createdTenant = new this.TenantModel(data);
+    // Generate username
+    const timestamp = Date.now();
+    const companyName = data.companyName;
+    const username = `${companyName}_${timestamp}`;
+
+    // Generate random password
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let password = '';
+    for (let i = 0; i < 8; i++) {
+      password += characters.charAt(
+        Math.floor(Math.random() * characters.length),
+      );
+    }
+
+    const createdTenant = new this.TenantModel({
+      ...data,
+      tenantUserName: username,
+      tenantPassword: password,
+    });
     return createdTenant.save();
   }
 
